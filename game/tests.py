@@ -246,3 +246,106 @@ class RankingAPITests(APITestCase):
 
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]["score"], 500)
+
+class RankingPageTests(APITestCase):
+    def setUp(self):
+        self.alice = User.objects.create_user(
+            username="alice",
+            password="password",
+        )
+        self.bob = User.objects.create_user(
+            username="bob",
+            password="password",
+        )
+
+    def test_ranking_page_is_sorted_by_score_descending(self):
+        GameResult.objects.create(
+            user=self.alice,
+            level=1,
+            score=300,
+        )
+        GameResult.objects.create(
+            user=self.bob,
+            level=1,
+            score=500,
+        )
+
+        self.client.force_login(user=self.alice)
+
+        response = self.client.get("/ranking/")
+
+        self.assertEqual(response.status_code, 200)
+
+        scores = list(response.context["scores"])
+
+        self.assertEqual(scores[0].score, 500)
+        self.assertEqual(scores[1].score, 300)
+
+    def test_ranking_page_can_filter_by_level(self):
+        GameResult.objects.create(
+            user=self.alice,
+            level=1,
+            score=500,
+        )
+        GameResult.objects.create(
+            user=self.bob,
+            level=2,
+            score=1000,
+        )
+
+        self.client.force_login(user=self.alice)
+
+        response = self.client.get("/ranking/?level=1")
+
+        self.assertEqual(response.status_code, 200)
+
+        scores = list(response.context["scores"])
+
+        self.assertEqual(len(scores), 1)
+        self.assertEqual(scores[0].level, 1)
+
+    def test_ranking_page_can_sort_by_username(self):
+        GameResult.objects.create(
+            user=self.alice,
+            level=1,
+            score=300,
+        )
+        GameResult.objects.create(
+            user=self.bob,
+            level=1,
+            score=500,
+        )
+
+        self.client.force_login(user=self.alice)
+
+        response = self.client.get("/ranking/?sort=user_asc")
+
+        self.assertEqual(response.status_code, 200)
+
+        scores = list(response.context["scores"])
+
+        self.assertEqual(scores[0].user.username, "alice")
+        self.assertEqual(scores[1].user.username, "bob")
+
+    def test_ranking_page_is_limited_to_ten_results(self):
+        for i in range(12):
+            user = User.objects.create_user(
+                username=f"user{i}",
+                password="password",
+            )
+
+            GameResult.objects.create(
+                user=user,
+                level=1,
+                score=100 + i,
+            )
+
+        self.client.force_login(user=self.alice)
+
+        response = self.client.get("/ranking/")
+
+        self.assertEqual(response.status_code, 200)
+
+        scores = list(response.context["scores"])
+
+        self.assertEqual(len(scores), 10)
