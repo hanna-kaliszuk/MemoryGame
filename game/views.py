@@ -12,7 +12,7 @@ from .serializers import GameResultSerializer
 from .forms import RegisterForm
 
 def home(request):
-    return HttpResponse("Memory Game")
+    return render(request, "game/game.html")
 
 def register(request):
     if request.method == "POST":

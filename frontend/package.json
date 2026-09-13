@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "esbuild src/main.ts --bundle --outfile=dist/main.js"
+    "build": "esbuild src/main.ts --bundle --outfile=../game/static/game/main.js"
   },
   "keywords": [],
   "author": "",
