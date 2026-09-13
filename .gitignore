@@ -19,3 +19,4 @@ db.sqlite3
 
 # Node
 frontend/node_modules/
+frontend/dist/
