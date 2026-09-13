@@ -80,5 +80,8 @@ export class Board {
         });
     }
 
+    public isGameOver(): boolean {
+        return this.game.isGameOver();
+    }
 
 }
