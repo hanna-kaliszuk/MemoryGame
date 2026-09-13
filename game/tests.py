@@ -38,5 +38,20 @@ class GameResultAPITests(APITestCase):
         self.assertEqual(result.level, 1)
         self.assertEqual(result.score, 500)
 
+    def test_invalid_level_is_rejected(self):
+        user = User.objects.create_user(
+            username="testuser",
+            password="testpassword",
+        )
+
+        self.client.force_authenticate(user=user)
+
+        response = self.client.post(
+            "/api/results/",
+            {"level": 5, "score": 500},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 400)
 
 
