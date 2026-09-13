@@ -12,6 +12,8 @@ export class Board {
         '🐶', '🐱', '🐭', '🐹',
     ];
 
+    private firstCardFlipped = false;
+
     constructor(containerId: string, game: MemoryGame) {
         const element = document.getElementById(containerId);
 
@@ -70,6 +72,11 @@ export class Board {
 
                 if (!this.game.revealCard(cardId)) {
                     return;
+                }
+
+                if (!this.firstCardFlipped) {
+                    this.game.startTimer();
+                    this.firstCardFlipped = true;
                 }
 
                 this.render();

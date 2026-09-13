@@ -73,7 +73,6 @@ function startGame(level: number): void {
     }
 
     currentBoard.render();
-    currentGame.startTimer();
 
     gameUpdateInterval = setInterval(() => {
         currentBoard?.updateStats();
