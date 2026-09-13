@@ -1,26 +1,30 @@
 import { MemoryGame } from "./game.js";
-import { LEVELS } from "./config.js";
 
-const level = LEVELS[1];
+const game = new MemoryGame(2, 10);
+const cards = game.getCards();
 
-const game = new MemoryGame(level.pairs, level.timeLimit);
+// Find two cards from different pairs.
+const firstCard = cards[0];
+const secondCard = cards.find(
+    (card) => card.pairId !== firstCard.pairId,
+)!;
 
-console.log(game.getCards());
-console.log(game.revealCard(0));
-console.log(game.getCards());
+console.log("First card:", firstCard);
+console.log("Second card:", secondCard);
 
-game.revealCard(1);
-game.revealCard(1);
-console.log(game.checkMatch());
+console.log("Reveal first:", game.revealCard(firstCard.id));
+console.log("Reveal second:", game.revealCard(secondCard.id));
 
-console.log(game.getScore());
+console.log("Match:", game.checkMatch());
+console.log("Score immediately:", game.getScore());
 
-console.log(game.getRemainingTime());
-
-game.startTimer();
+console.log("Before reset:");
+console.log("First revealed:", firstCard.isRevealed);
+console.log("Second revealed:", secondCard.isRevealed);
 
 setTimeout(() => {
-    console.log(game.getRemainingTime());
-}, 3000);
-
-console.log(game.getRemainingTime());
+    console.log("After 1 second:");
+    console.log("First revealed:", firstCard.isRevealed);
+    console.log("Second revealed:", secondCard.isRevealed);
+    console.log("Score:", game.getScore());
+}, 1100);

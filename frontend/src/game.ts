@@ -20,6 +20,8 @@ export class MemoryGame {
     private remainingTime: number;
     private timerId: ReturnType<typeof setInterval> | null = null;
 
+    private gameOver = false;
+
     constructor(private readonly pairs: number, timeLimit: number,
     ) {
         this.remainingTime = timeLimit;
@@ -73,9 +75,17 @@ export class MemoryGame {
     }
 
     public revealCard(cardId: number): boolean {
+        if (this.gameOver) {
+            return false;
+        }
+
         const card = this.cards.find((card) => card.id === cardId);
 
         if (!card || card.isRevealed || card.isMatched) {
+            return false;
+        }
+
+        if (this.firstCard !== null && this.secondCard !== null) {
             return false;
         }
 
@@ -102,6 +112,18 @@ export class MemoryGame {
             this.firstCard.isMatched = true;
             this.secondCard.isMatched = true;
             this.matchedPairs++;
+
+            if (this.matchedPairs === this.pairs) {
+                this.stopTimer();
+                this.score += this.remainingTime * TIME_MULTIPLIER;
+                this.gameOver = true;
+            } else {
+                this.resetSelection();
+            }
+        } else {
+            setTimeout(() => {
+                this.resetSelection();
+            }, 1000);
         }
 
         return isMatch;
@@ -119,6 +141,7 @@ export class MemoryGame {
 
             if (this.remainingTime === 0) {
                 this.stopTimer();
+                this.gameOver = true;
             }
         }, 1000);
     }
@@ -153,5 +176,9 @@ export class MemoryGame {
 
     public getRemainingTime(): number {
         return this.remainingTime;
+    }
+
+    public isGameOver(): boolean {
+        return this.gameOver;
     }
 }
