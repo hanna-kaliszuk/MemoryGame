@@ -14,3 +14,13 @@ game.revealCard(1);
 console.log(game.checkMatch());
 
 console.log(game.getScore());
+
+console.log(game.getRemainingTime());
+
+game.startTimer();
+
+setTimeout(() => {
+    console.log(game.getRemainingTime());
+}, 3000);
+
+console.log(game.getRemainingTime());

@@ -18,6 +18,7 @@ export class MemoryGame {
     private mistakes = 0;
     private matchedPairs = 0;
     private remainingTime: number;
+    private timerId: ReturnType<typeof setInterval> | null = null;
 
     constructor(private readonly pairs: number, timeLimit: number,
     ) {
@@ -106,6 +107,29 @@ export class MemoryGame {
         return isMatch;
     }
 
+    public startTimer(): void {
+        if (this.timerId !== null) {
+            return;
+        }
+
+        this.timerId = setInterval(() => {
+            if (this.remainingTime > 0) {
+                this.remainingTime--;
+            }
+
+            if (this.remainingTime === 0) {
+                this.stopTimer();
+            }
+        }, 1000);
+    }
+
+    public stopTimer(): void {
+        if (this.timerId !== null) {
+            clearInterval(this.timerId);
+            this.timerId = null;
+        }
+    }
+
     public resetSelection(): void {
         if (this.firstCard !== null && !this.firstCard.isMatched) {
             this.firstCard.isRevealed = false;
@@ -125,5 +149,9 @@ export class MemoryGame {
 
     public getScore(): number {
         return this.score;
+    }
+
+    public getRemainingTime(): number {
+        return this.remainingTime;
     }
 }
