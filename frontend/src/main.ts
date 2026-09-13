@@ -79,7 +79,11 @@ function startGame(level: number): void {
 
         if (currentGame?.isGameOver() && !resultSaved) {
             resultSaved = true;
-            saveGameResult();
+
+            if (currentGame.isFinished()) {
+                saveGameResult();
+            }
+
             showGameOverModal();
         }
     }, 1000);
@@ -185,7 +189,12 @@ function showGameOverModal(): void {
         return;
     }
 
-    message.textContent = `Game over! Your score: ${currentGame.getScore()} p`;
+    if (currentGame.isFinished()) {
+        message.textContent =
+            `You won! Your score: ${currentGame.getScore()} p`;
+    } else {
+        message.textContent = 'Time is up! You lost.';
+    }
 
     modal.style.display = 'block';
 }
