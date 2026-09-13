@@ -54,4 +54,54 @@ class GameResultAPITests(APITestCase):
 
         self.assertEqual(response.status_code, 400)
 
+    def test_missing_score_is_rejected(self):
+        user = User.objects.create_user(
+            username="testuser",
+            password="testpassword",
+        )
+
+        self.client.force_authenticate(user=user)
+
+        response = self.client.post(
+            "/api/results/",
+            {"level": 1},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 400)
+
+    def test_missing_level_is_rejected(self):
+        user = User.objects.create_user(
+            username="testuser",
+            password="testpassword",
+        )
+
+        self.client.force_authenticate(user=user)
+
+        response = self.client.post(
+            "/api/results/",
+            {"score": 500},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 400)
+
+    def test_result_is_assigned_to_authenticated_user(self):
+        user = User.objects.create_user(
+            username="testuser",
+            password="testpassword",
+        )
+
+        self.client.force_authenticate(user=user)
+
+        self.client.post(
+            "/api/results/",
+            {"level": 2, "score": 750},
+            format="json",
+        )
+
+        result = GameResult.objects.get()
+
+        self.assertEqual(result.user, user)
+
 
