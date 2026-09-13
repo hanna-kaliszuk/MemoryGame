@@ -1,3 +1,7 @@
+const MATCH_POINTS = 100;
+const MISMATCH_PENALTY = 25;
+const TIME_MULTIPLIER = 10;
+
 export interface Card {
     id: number;
     pairId: number;
@@ -53,6 +57,16 @@ export class MemoryGame {
         }
     }
 
+    private updateScore(isMatch: boolean): void {
+        if (isMatch) {
+            this.score += MATCH_POINTS;
+        } else {
+            this.score -= MISMATCH_PENALTY;
+        }
+
+        this.score = Math.max(0, this.score);
+    }
+
     public getCards(): Card[] {
         return this.cards;
     }
@@ -81,6 +95,7 @@ export class MemoryGame {
         }
 
         const isMatch = this.firstCard.pairId === this.secondCard.pairId;
+        this.updateScore(isMatch);
 
         if (isMatch) {
             this.firstCard.isMatched = true;
@@ -106,5 +121,9 @@ export class MemoryGame {
 
     public isFinished(): boolean {
         return this.matchedPairs === this.pairs;
+    }
+
+    public getScore(): number {
+        return this.score;
     }
 }

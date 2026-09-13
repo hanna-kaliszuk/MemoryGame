@@ -10,5 +10,7 @@ console.log(game.revealCard(0));
 console.log(game.getCards());
 
 game.revealCard(1);
-game.revealCard(2);
+game.revealCard(1);
 console.log(game.checkMatch());
+
+console.log(game.getScore());
