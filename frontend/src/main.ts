@@ -111,24 +111,62 @@ function returnToLevelSelection(): void {
     currentBoard = null;
 }
 
+function getCookie(name: string): string | null {
+    let cookieValue = null;
+
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(
+                    cookie.substring(name.length + 1)
+                );
+                break;
+            }
+        }
+    }
+
+    return cookieValue;
+}
+
 async function saveGameResult(): Promise<void> {
     if (currentGame === null || currentLevel === null) {
         return;
     }
 
-    const response = await fetch('/api/results/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            level: currentLevel,
-            score: currentGame.getScore(),
-        }),
-    });
+    const csrfToken = getCookie('csrftoken');
 
-    if (!response.ok) {
-        console.error('Failed to save game result.');
+    if (!csrfToken) {
+        console.warn('CSRF token not found.');
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/results/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+            },
+            body: JSON.stringify({
+                level: currentLevel,
+                score: currentGame.getScore(),
+            }),
+        });
+
+        if (response.ok) {
+            console.log('Game result saved.');
+        } else {
+            console.error(
+                'Failed to save game result:',
+                await response.text()
+            );
+        }
+    } catch (error) {
+        console.error('Network error while saving game result:', error);
     }
 }
 

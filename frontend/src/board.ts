@@ -3,6 +3,14 @@ import {MemoryGame} from './game';
 export class Board {
     private readonly container: HTMLElement;
     private readonly game: MemoryGame;
+    private readonly emojis = [
+        '🍎', '🍌', '🍇', '🍉',
+        '🍓', '🍒', '🥝', '🍍',
+        '🥑', '🍋', '🍊', '🥥',
+        '🍑', '🍐', '🫐', '🥕',
+        '🌽', '🍄', '🌻', '🌵',
+        '🐶', '🐱', '🐭', '🐹',
+    ];
 
     constructor(containerId: string, game: MemoryGame) {
         const element = document.getElementById(containerId);
@@ -43,6 +51,9 @@ export class Board {
             const cardElement = document.createElement('div');
 
             cardElement.classList.add('card');
+            if (card.isRevealed || card.isMatched) {
+                    cardElement.textContent = this.emojis[card.pairId];
+            }
 
             if (card.isRevealed) {
                 cardElement.classList.add('flipped');
