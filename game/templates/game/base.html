@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Memory Game{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'game/css/style.css' %}">
+</head>
+<body>
+<header>
+    <nav>
+        <a href="{% url 'home' %}">Play</a>
+
+        {% if user.is_authenticated %}
+            <form method="POST" action="{% url 'logout' %}" style="display:inline; margin-left: 15px;">
+                {% csrf_token %}
+                <button type="submit">Log Out</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}">Log In</a>
+            <a href="{% url 'register' %}">Register</a>
+        {% endif %}
+    </nav>
+    <hr>
+</header>
+
+<main>
+    {% block content %}{% endblock %}
+</main>
+</body>
+</html>

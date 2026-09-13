@@ -1,13 +1,56 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Memory Game</title>
-</head>
-<body>
-    <h1>Memory Game</h1>
+{% extends "game/base.html" %}
 
-    <script src="{% static 'game/main.js' %}"></script>
-</body>
-</html>
+{% block title %}Play Memory{% endblock %}
+
+{% block content %}
+
+<h1>Memory Game</h1>
+
+<div id="level-selection">
+    <h2 id="choose-level-text">Choose level:</h2>
+
+    <button class="level-btn" data-level="1">Level 1 (4x4)</button>
+    <button class="level-btn" data-level="2">Level 2 (4x6)</button>
+    <button class="level-btn" data-level="3">Level 3 (6x6)</button>
+    <button class="level-btn" data-level="4">Level 4 (6x8)</button>
+</div>
+
+<div id="game-content" style="display: none;">
+
+    <div id="stats">
+        Points: <strong id="game-score">0 p</strong>
+        |
+        Time: <strong id="game-timer">0s</strong>
+    </div>
+
+    <div id="game-layout">
+
+        <div id="game-board"></div>
+
+        <div id="live-ranking">
+            <h2>
+                TOP 5 LIVE
+                (Level <span id="current-level-display">1</span>)
+            </h2>
+
+            <div id="live-scores-list">
+                Waiting for server data...
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div id="retro-modal" style="display: none;">
+    <div id="modal-title">
+        <span id="modal-title-text">Memory Game</span>
+        <button id="close-modal-btn">×</button>
+    </div>
+
+    <div id="modal-message"></div>
+
+    <button id="modal-ok-btn">OK</button>
+</div>
+
+{% endblock %}
