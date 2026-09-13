@@ -11,10 +11,12 @@ export class Board {
         '🌽', '🍄', '🌻', '🌵',
         '🐶', '🐱', '🐭', '🐹',
     ];
+    private readonly rows: number;
+    private readonly columns: number;
 
     private firstCardFlipped = false;
 
-    constructor(containerId: string, game: MemoryGame) {
+    constructor(containerId: string, game: MemoryGame, rows: number, columns: number) {
         const element = document.getElementById(containerId);
 
         if (!element) {
@@ -23,6 +25,8 @@ export class Board {
 
         this.container = element;
         this.game = game;
+        this.rows = rows;
+        this.columns = columns;
     }
 
     public updateStats(): void {
@@ -44,10 +48,9 @@ export class Board {
         this.container.innerHTML = '';
 
         const cards = this.game.getCards();
-        const columns = Math.ceil(Math.sqrt(cards.length));
 
         this.container.style.display = 'grid';
-        this.container.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+        this.container.style.gridTemplateColumns = `repeat(${this.columns}, 1fr)`;
 
         cards.forEach((card) => {
             const cardElement = document.createElement('div');

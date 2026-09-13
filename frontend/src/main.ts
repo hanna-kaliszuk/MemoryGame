@@ -52,7 +52,7 @@ function startGame(level: number): void {
 
     currentLevel = level;
     currentGame = new MemoryGame(config.pairs, config.timeLimit);
-    currentBoard = new Board('game-board', currentGame);
+    currentBoard = new Board('game-board', currentGame, config.rows, config.columns);
 
     connectToLiveRanking(level);
 
