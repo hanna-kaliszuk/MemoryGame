@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     "game",
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
