@@ -9,6 +9,7 @@ let currentBoard: Board | null = null;
 let gameUpdateInterval: ReturnType<typeof setInterval> | null = null;
 let currentLevel: number | null = null;
 let resultSaved = false;
+let sseConnection: EventSource | null = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     const levelButtons = document.querySelectorAll<HTMLButtonElement>('.level-btn');
@@ -47,11 +48,13 @@ function startGame(level: number): void {
         return;
     }
 
+    resultSaved = false;
+
     currentLevel = level;
     currentGame = new MemoryGame(config.pairs, config.timeLimit);
     currentBoard = new Board('game-board', currentGame);
 
-    resultSaved = false;
+    connectToLiveRanking(level);
 
     const levelSelection = document.getElementById('level-selection');
     const gameContent = document.getElementById('game-content');
@@ -87,6 +90,11 @@ function returnToLevelSelection(): void {
     if (gameUpdateInterval !== null) {
         clearInterval(gameUpdateInterval);
         gameUpdateInterval = null;
+    }
+
+    if (sseConnection !== null) {
+        sseConnection.close();
+        sseConnection = null;
     }
 
     currentGame?.stopTimer();
@@ -181,4 +189,53 @@ function showGameOverModal(): void {
     message.textContent = `Game over! Your score: ${currentGame.getScore()} p`;
 
     modal.style.display = 'block';
+}
+
+function connectToLiveRanking(level: number): void {
+    if (sseConnection !== null) {
+        sseConnection.close();
+    }
+
+    const levelDisplay = document.getElementById('current-level-display');
+
+    if (levelDisplay) {
+        levelDisplay.textContent = level.toString();
+    }
+
+    sseConnection = new EventSource(
+        `/api/ranking/stream/${level}/`
+    );
+
+    sseConnection.onmessage = (event: MessageEvent): void => {
+        const scores = JSON.parse(event.data) as Array<{
+            username: string;
+            score: number;
+        }>;
+
+        const listElement = document.getElementById('live-scores-list');
+
+        if (!listElement) {
+            return;
+        }
+
+        listElement.innerHTML = '';
+
+        if (scores.length === 0) {
+            listElement.textContent = 'No scores yet.';
+            return;
+        }
+
+        scores.forEach((result, index) => {
+            const entry = document.createElement('div');
+
+            entry.textContent =
+                `${index + 1}. ${result.username}: ${result.score} p`;
+
+            listElement.appendChild(entry);
+        });
+    };
+
+    sseConnection.onerror = (): void => {
+        console.warn('SSE connection error.');
+    };
 }

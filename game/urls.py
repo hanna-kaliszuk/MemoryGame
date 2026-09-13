@@ -7,4 +7,9 @@ urlpatterns = [
     path("accounts/register/", views.register, name="register"),
     path("api/results/", views.GameResultView.as_view(), name="game-results"),
     path("api/ranking/<int:level>/", views.ranking, name="ranking"),
+    path(
+        "api/ranking/stream/<int:level>/",
+        views.ranking_stream,
+        name="ranking-stream",
+    ),
 ]

@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, StreamingHttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import login
 from rest_framework.permissions import IsAuthenticated
@@ -8,6 +8,9 @@ from rest_framework.views import APIView
 from .forms import RegisterForm
 from .models import GameResult
 from .serializers import GameResultSerializer
+
+import json
+import time
 
 def home(request):
     return render(request, "game/game.html")
@@ -42,6 +45,38 @@ def ranking(request, level):
     ]
 
     return JsonResponse(data, safe=False)
+
+def ranking_stream(request, level):
+    def event_stream():
+        while True:
+            results = (
+                GameResult.objects
+                .filter(level=level)
+                .select_related("user")
+                .order_by("-score", "user__username")[:5]
+            )
+
+            data = [
+                {
+                    "username": result.user.username,
+                    "score": result.score,
+                }
+                for result in results
+            ]
+
+            yield f"data: {json.dumps(data)}\n\n"
+
+            time.sleep(2)
+
+    response = StreamingHttpResponse(
+        event_stream(),
+        content_type="text/event-stream",
+    )
+
+    response["Cache-Control"] = "no-cache"
+    response["X-Accel-Buffering"] = "no"
+
+    return response
 
 class GameResultView(APIView):
     permission_classes = [IsAuthenticated]
