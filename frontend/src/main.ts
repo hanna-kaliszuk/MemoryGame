@@ -1,30 +1,46 @@
-import { MemoryGame } from "./game.js";
+import { MemoryGame } from './game';
+import { Board } from './board';
+import { LEVELS } from './config';
 
-const game = new MemoryGame(2, 10);
-const cards = game.getCards();
+let currentGame: MemoryGame | null = null;
+let currentBoard: Board | null = null;
 
-// Find two cards from different pairs.
-const firstCard = cards[0];
-const secondCard = cards.find(
-    (card) => card.pairId !== firstCard.pairId,
-)!;
+document.addEventListener('DOMContentLoaded', () => {
+    const levelButtons = document.querySelectorAll<HTMLButtonElement>('.level-btn');
 
-console.log("First card:", firstCard);
-console.log("Second card:", secondCard);
+    levelButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+            const level = Number(button.dataset.level);
+            startGame(level);
+        });
+    });
+});
 
-console.log("Reveal first:", game.revealCard(firstCard.id));
-console.log("Reveal second:", game.revealCard(secondCard.id));
+function startGame(level: number): void {
+    const config = LEVELS[level];
 
-console.log("Match:", game.checkMatch());
-console.log("Score immediately:", game.getScore());
+    if (!config) {
+        return;
+    }
 
-console.log("Before reset:");
-console.log("First revealed:", firstCard.isRevealed);
-console.log("Second revealed:", secondCard.isRevealed);
+    currentGame = new MemoryGame(config.pairs, config.timeLimit);
+    currentBoard = new Board('game-board', currentGame);
 
-setTimeout(() => {
-    console.log("After 1 second:");
-    console.log("First revealed:", firstCard.isRevealed);
-    console.log("Second revealed:", secondCard.isRevealed);
-    console.log("Score:", game.getScore());
-}, 1100);
+    const levelSelection = document.getElementById('level-selection');
+    const gameContent = document.getElementById('game-content');
+    const currentLevelDisplay = document.getElementById('current-level-display');
+
+    if (levelSelection) {
+        levelSelection.style.display = 'none';
+    }
+
+    if (gameContent) {
+        gameContent.style.display = 'block';
+    }
+
+    if (currentLevelDisplay) {
+        currentLevelDisplay.textContent = level.toString();
+    }
+
+    currentBoard.render();
+}

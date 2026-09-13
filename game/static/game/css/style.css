@@ -1,0 +1,447 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+* {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cpolygon points='2,2 2,16 6,13 8,18 10,17 8,12 13,12' fill='white' stroke='black' stroke-width='1.5'/%3E%3C/svg%3E") 2 2, auto;
+}
+
+button, .level-btn, a {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cpolygon points='2,2 2,16 6,13 8,18 10,17 8,12 13,12' fill='white' stroke='black' stroke-width='1.5'/%3E%3C/svg%3E") 2 2, pointer;
+}
+
+/* === RESET AND BASICS === */
+*, *::before, *::after {
+    box-sizing: border-box;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+/* === BACKGROUND === */
+body {
+    font-family: 'Press Start 2P', monospace;
+    background-color: #87CEEB;
+    background-image:
+        /* clouds */
+            radial-gradient(ellipse 60px 30px at 10% 15%, #ffffff 80%, transparent 81%),
+            radial-gradient(ellipse 40px 20px at 13% 12%, #ffffff 80%, transparent 81%),
+            radial-gradient(ellipse 80px 35px at 70% 8%, #ffffff 80%, transparent 81%),
+            radial-gradient(ellipse 50px 25px at 74% 5%, #ffffff 80%, transparent 81%),
+            radial-gradient(ellipse 55px 28px at 40% 20%, #ffffff 80%, transparent 81%),
+                /* "ground" on the bottom */
+            linear-gradient(to top, #5a9e47 0px, #5a9e47 60px, #6db84a 60px, #6db84a 80px, transparent 80px);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    color: #ffffff;
+    text-shadow: 2px 2px 0px #000000;
+    margin: 0;
+    padding: 20px;
+    line-height: 2;
+    min-height: 100vh;
+}
+
+nav {
+    background-color: #5bc8f5;
+    padding: 12px 16px;
+    border-top: 4px solid #aeeeff;
+    border-left: 4px solid #aeeeff;
+    border-right: 4px solid #1a7aaa;
+    border-bottom: 4px solid #1a7aaa;
+    margin-bottom: 30px;
+    color: #ffffff;
+    text-shadow: 1px 1px 0px #000000;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    image-rendering: pixelated;
+}
+
+nav .nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+nav .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+}
+
+nav a, nav span {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 10px;
+    margin-right: 12px;
+    text-shadow: 1px 1px 0px #000000;
+}
+
+nav a:hover {
+    color: #ffff00;
+    text-shadow: 1px 1px 0px #000000, 0 0 4px #ffff00;
+}
+
+button, .level-btn {
+    font-family: 'Press Start 2P', monospace;
+    background-color: #c0c0c0;
+    color: #000000;
+    padding: 10px 16px;
+    margin: 4px;
+    border-top: 4px solid #ffffff;
+    border-left: 4px solid #ffffff;
+    border-right: 4px solid #555555;
+    border-bottom: 4px solid #555555;
+    cursor: pointer;
+    font-size: 9px;
+    text-shadow: none;
+    outline: none;
+    transition: none;
+    letter-spacing: 1px;
+    /* pixel border */
+    box-shadow:
+            0 0 0 2px #000000,
+            inset 0 0 0 1px #888888;
+}
+
+button:hover, .level-btn:hover {
+    background-color: #d0d8ff;
+    color: #000066;
+}
+
+button:active, .level-btn:active {
+    border-top: 4px solid #555555;
+    border-left: 4px solid #555555;
+    border-right: 4px solid #ffffff;
+    border-bottom: 4px solid #ffffff;
+    background-color: #aaaaaa;
+    transform: translate(1px, 1px);
+}
+
+.window, main, .container, #game-container, form {
+    background-color: #5bc8f5;
+    border-top: 4px solid #aeeeff;
+    border-left: 4px solid #aeeeff;
+    border-right: 4px solid #1a7aaa;
+    border-bottom: 4px solid #1a7aaa;
+    box-shadow: 4px 4px 0px #000000;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.window-title, .titlebar {
+    background: linear-gradient(90deg, #1e5faa 0%, #5bc8f5 100%);
+    color: #ffffff;
+    font-size: 10px;
+    padding: 6px 10px;
+    margin: -20px -20px 16px -20px;
+    text-shadow: 1px 1px 0 #000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #000000;
+}
+
+table {
+    background-color: #001a00;
+    border: 4px solid #5bc8f5;
+    box-shadow: 4px 4px 0px #000000;
+    width: 100%;
+    max-width: 800px;
+    color: #00ff88;
+    text-shadow: 0 0 6px #00ff88;
+    border-collapse: collapse;
+    font-size: 9px;
+}
+
+th, td {
+    border: 2px solid #005500;
+    padding: 12px;
+    text-align: center;
+}
+
+th {
+    background-color: #004400;
+    color: #ffffff;
+    text-shadow: 1px 1px 0 #000000;
+    letter-spacing: 1px;
+    border-bottom: 3px solid #00ff88;
+}
+
+th a {
+    color: #00ff88 !important;
+    text-shadow: 0 0 6px #00ff88;
+}
+
+tr:hover td {
+    background-color: #002800;
+    color: #ffff00;
+    text-shadow: 0 0 4px #ffff00;
+}
+
+#game-layout {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 24px;
+    margin-top: 20px;
+}
+
+#game-board {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    max-width: 600px;
+    align-content: flex-start;
+}
+
+.card {
+    width: 72px;
+    height: 72px;
+    background-color: #1a5fa8;
+    border-top: 4px solid #5599ff;
+    border-left: 4px solid #5599ff;
+    border-right: 4px solid #00003a;
+    border-bottom: 4px solid #00003a;
+    box-shadow: 3px 3px 0px #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.05s;
+    background-image: repeating-linear-gradient(
+            45deg,
+            rgba(255,255,255,0.05) 0px,
+            rgba(255,255,255,0.05) 4px,
+            transparent 4px,
+            transparent 8px
+    );
+}
+
+.card:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0px #000000;
+    border-top-color: #aaccff;
+    border-left-color: #aaccff;
+}
+
+.card.flipped {
+    background-color: #e8f4f8;
+    background-image: none;
+    border-top: 4px solid #888888;
+    border-left: 4px solid #888888;
+    border-right: 4px solid #ffffff;
+    border-bottom: 4px solid #ffffff;
+    text-shadow: none;
+}
+
+.card.matched {
+    background-color: #c8f0c8;
+    background-image: none;
+    border-top: 4px solid #559955;
+    border-left: 4px solid #559955;
+    border-right: 4px solid #ffffff;
+    border-bottom: 4px solid #ffffff;
+    opacity: 0.85;
+    text-shadow: none;
+}
+
+#live-ranking {
+    background-color: #000000;
+    border: 4px solid #5bc8f5;
+    box-shadow: 6px 6px 0px #000000;
+    color: #ffcc00;
+    padding: 16px;
+    text-shadow: 0 0 4px #ffcc00;
+    font-size: 9px;
+    line-height: 2.2;
+    align-self: flex-start;
+}
+
+#live-ranking h2, #live-ranking h3 {
+    color: #ff4444;
+    text-shadow: 2px 2px 0px #000000;
+    border-bottom: 2px solid #ff4444;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+    letter-spacing: 2px;
+}
+
+/* === HEADERS === */
+h1, h2, h3, h4 {
+    font-family: 'Press Start 2P', monospace;
+    text-shadow: 3px 3px 0px #000000;
+    line-height: 1.5;
+    margin-bottom: 16px;
+}
+
+h1 {
+    color: #ffff00;
+    font-size: 20px;
+    letter-spacing: 2px;
+}
+
+h2 {
+    color: #ffffff;
+    font-size: 14px;
+}
+
+h3 {
+    color: #aeeeff;
+    font-size: 11px;
+}
+
+input, select, textarea {
+    font-family: 'Press Start 2P', monospace;
+    background-color: #000000;
+    color: #00ff88;
+    border-top: 3px solid #333333;
+    border-left: 3px solid #333333;
+    border-right: 3px solid #aaaaaa;
+    border-bottom: 3px solid #aaaaaa;
+    padding: 8px 10px;
+    font-size: 9px;
+    outline: none;
+    caret-color: #00ff88;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #5bc8f5;
+    box-shadow: 0 0 0 2px #5bc8f5;
+    color: #ffffff;
+}
+
+label {
+    font-size: 9px;
+    color: #aeeeff;
+    text-shadow: 1px 1px 0 #000;
+    display: block;
+    margin-bottom: 4px;
+}
+
+/* === LINKS === */
+a {
+    color: #ffff00;
+    text-shadow: 1px 1px 0 #000;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+}
+
+a:hover {
+    color: #ffffff;
+    border-bottom: 2px solid #ffffff;
+}
+
+a:visited {
+    color: #ffaa00;
+}
+
+.alert, .message, .notification {
+    background-color: #000080;
+    border-top: 4px solid #aaaaff;
+    border-left: 4px solid #aaaaff;
+    border-right: 4px solid #000033;
+    border-bottom: 4px solid #000033;
+    box-shadow: 4px 4px 0px #000000;
+    color: #ffffff;
+    padding: 12px 16px;
+    font-size: 9px;
+    margin: 12px 0;
+    text-shadow: 1px 1px 0 #000;
+}
+
+.alert-success {
+    background-color: #004400;
+    border-top-color: #aaffaa;
+    border-left-color: #aaffaa;
+    color: #00ff88;
+}
+
+.alert-error, .alert-danger {
+    background-color: #440000;
+    border-top-color: #ffaaaa;
+    border-left-color: #ffaaaa;
+    color: #ff4444;
+}
+
+.score, #score, .points {
+    font-family: 'Press Start 2P', monospace;
+    color: #ffff00;
+    text-shadow: 2px 2px 0 #ff6600, 4px 4px 0 #000000;
+    font-size: 16px;
+    letter-spacing: 2px;
+}
+
+.timer, #timer {
+    font-family: 'Press Start 2P', monospace;
+    color: #ff4444;
+    text-shadow: 2px 2px 0 #880000;
+    font-size: 14px;
+}
+
+progress, .progress-bar {
+    appearance: none;
+    -webkit-appearance: none;
+    height: 20px;
+    width: 100%;
+    border: 3px solid #000000;
+    background-color: #000033;
+}
+
+progress::-webkit-progress-bar {
+    background-color: #000033;
+}
+
+progress::-webkit-progress-value {
+    background-color: #00ff88;
+    box-shadow: 0 0 4px #00ff88;
+}
+
+::-webkit-scrollbar {
+    width: 16px;
+    background-color: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #5bc8f5;
+    border-top: 4px solid #aeeeff;
+    border-left: 4px solid #aeeeff;
+    border-right: 4px solid #1a7aaa;
+    border-bottom: 4px solid #1a7aaa;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #001122;
+}
+
+::selection {
+    background-color: #1e5faa;
+    color: #ffffff;
+    text-shadow: none;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+        font-size: 8px;
+    }
+
+    h1 { font-size: 14px; }
+    h2 { font-size: 11px; }
+
+    .card {
+        width: 56px;
+        height: 56px;
+        font-size: 24px;
+    }
+
+    #game-board {
+        gap: 8px;
+    }
+}
