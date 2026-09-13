@@ -6,3 +6,5 @@ const level = LEVELS[1];
 const game = new MemoryGame(level.pairs, level.timeLimit);
 
 console.log(game.getCards());
+console.log(game.revealCard(0));
+console.log(game.getCards());

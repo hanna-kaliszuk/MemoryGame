@@ -15,9 +15,7 @@ export class MemoryGame {
     private matchedPairs = 0;
     private remainingTime: number;
 
-    constructor(
-        private readonly pairs: number,
-        timeLimit: number,
+    constructor(private readonly pairs: number, timeLimit: number,
     ) {
         this.remainingTime = timeLimit;
         this.cards = this.createCards();
@@ -57,5 +55,23 @@ export class MemoryGame {
 
     public getCards(): Card[] {
         return this.cards;
+    }
+
+    public revealCard(cardId: number): boolean {
+        const card = this.cards.find((card) => card.id === cardId);
+
+        if (!card || card.isRevealed || card.isMatched) {
+            return false;
+        }
+
+        card.isRevealed = true;
+
+        if (this.firstCard === null) {
+            this.firstCard = card;
+        } else {
+            this.secondCard = card;
+        }
+
+        return true;
     }
 }
