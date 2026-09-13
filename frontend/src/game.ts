@@ -74,4 +74,37 @@ export class MemoryGame {
 
         return true;
     }
+
+    public checkMatch(): boolean | null {
+        if (this.firstCard === null || this.secondCard === null) {
+            return null;
+        }
+
+        const isMatch = this.firstCard.pairId === this.secondCard.pairId;
+
+        if (isMatch) {
+            this.firstCard.isMatched = true;
+            this.secondCard.isMatched = true;
+            this.matchedPairs++;
+        }
+
+        return isMatch;
+    }
+
+    public resetSelection(): void {
+        if (this.firstCard !== null && !this.firstCard.isMatched) {
+            this.firstCard.isRevealed = false;
+        }
+
+        if (this.secondCard !== null && !this.secondCard.isMatched) {
+            this.secondCard.isRevealed = false;
+        }
+
+        this.firstCard = null;
+        this.secondCard = null;
+    }
+
+    public isFinished(): boolean {
+        return this.matchedPairs === this.pairs;
+    }
 }
