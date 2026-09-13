@@ -2,9 +2,13 @@ import { MemoryGame } from './game';
 import { Board } from './board';
 import { LEVELS } from './config';
 
+declare const isAuthenticated: boolean;
+
 let currentGame: MemoryGame | null = null;
 let currentBoard: Board | null = null;
 let gameUpdateInterval: ReturnType<typeof setInterval> | null = null;
+let currentLevel: number | null = null;
+let resultSaved = false;
 
 document.addEventListener('DOMContentLoaded', () => {
     const levelButtons = document.querySelectorAll<HTMLButtonElement>('.level-btn');
@@ -32,14 +36,22 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function startGame(level: number): void {
+    if (!isAuthenticated) {
+        window.location.href = '/accounts/login/';
+        return;
+    }
+
     const config = LEVELS[level];
 
     if (!config) {
         return;
     }
 
+    currentLevel = level;
     currentGame = new MemoryGame(config.pairs, config.timeLimit);
     currentBoard = new Board('game-board', currentGame);
+
+    resultSaved = false;
 
     const levelSelection = document.getElementById('level-selection');
     const gameContent = document.getElementById('game-content');
@@ -63,7 +75,9 @@ function startGame(level: number): void {
     gameUpdateInterval = setInterval(() => {
         currentBoard?.updateStats();
 
-        if (currentGame?.isGameOver()) {
+        if (currentGame?.isGameOver() && !resultSaved) {
+            resultSaved = true;
+            saveGameResult();
             showGameOverModal();
         }
     }, 1000);
@@ -95,6 +109,27 @@ function returnToLevelSelection(): void {
 
     currentGame = null;
     currentBoard = null;
+}
+
+async function saveGameResult(): Promise<void> {
+    if (currentGame === null || currentLevel === null) {
+        return;
+    }
+
+    const response = await fetch('/api/results/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            level: currentLevel,
+            score: currentGame.getScore(),
+        }),
+    });
+
+    if (!response.ok) {
+        console.error('Failed to save game result.');
+    }
 }
 
 function showGameOverModal(): void {

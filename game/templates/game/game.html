@@ -55,6 +55,10 @@
     <button id="modal-ok-btn">OK</button>
 </div>
 
+<script>
+    const isAuthenticated = {{ user.is_authenticated|yesno:"true,false" }};
+</script>
+
 <script src="{% static 'game/main.js' %}"></script>
 
 {% endblock %}
