@@ -1,0 +1,175 @@
+{% extends "game/base.html" %}
+
+{% block title %}Leaderboard{% endblock %}
+
+{% block content %}
+
+<h1>
+    Leaderboard
+    {% if current_level != 'all' %}
+        — Level {{ current_level }}
+    {% else %}
+        — All Levels
+    {% endif %}
+</h1>
+
+<style>
+    .ranking-sort-link,
+    .level-filter-label {
+        color: inherit;
+        text-decoration: none;
+        font: inherit;
+        font-weight: inherit;
+        cursor: pointer;
+    }
+
+    .ranking-sort-link:hover,
+    .level-filter-th:hover .level-filter-label {
+        text-decoration: none;
+    }
+
+    .level-filter-th {
+        position: relative;
+    }
+
+    .level-filter-form {
+        background: transparent;
+        border: 0;
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        position: relative;
+    }
+
+    .level-filter-label {
+        display: inline-block;
+        color: #00ff88;
+        text-shadow: 0 0 6px #00ff88;
+        pointer-events: none;
+    }
+
+    .level-filter-select {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+        border: none;
+    }
+</style>
+
+<table border="1" cellpadding="10" style="margin-top: 20px; border-collapse: collapse;">
+    <thead>
+        <tr>
+            <th>Place</th>
+
+            <th>
+                <a
+                    href="?sort={% if current_sort == 'user_asc' %}user_desc{% else %}user_asc{% endif %}&level={{ current_level }}"
+                    class="ranking-sort-link"
+                >
+                    Player
+                    {% if current_sort == 'user_asc' %}
+                        ▲
+                    {% elif current_sort == 'user_desc' %}
+                        ▼
+                    {% else %}
+                        ↕
+                    {% endif %}
+                </a>
+            </th>
+
+            <th class="level-filter-th">
+                <form method="GET" class="level-filter-form">
+                    <input type="hidden" name="sort" value="{{ current_sort }}">
+
+                    <span class="level-filter-label">
+                        Level ↕
+                    </span>
+
+                    <select
+                        name="level"
+                        class="level-filter-select"
+                        onchange="this.form.submit()"
+                        aria-label="Select level"
+                    >
+                        <option value="all" {% if current_level == 'all' %}selected{% endif %}>
+                            All Levels
+                        </option>
+
+                        <option value="1" {% if current_level == '1' %}selected{% endif %}>
+                            Level 1
+                        </option>
+
+                        <option value="2" {% if current_level == '2' %}selected{% endif %}>
+                            Level 2
+                        </option>
+
+                        <option value="3" {% if current_level == '3' %}selected{% endif %}>
+                            Level 3
+                        </option>
+
+                        <option value="4" {% if current_level == '4' %}selected{% endif %}>
+                            Level 4
+                        </option>
+                    </select>
+                </form>
+            </th>
+
+            <th>
+                <a
+                    href="?sort={% if current_sort == 'points_desc' %}points_asc{% else %}points_desc{% endif %}&level={{ current_level }}"
+                    class="ranking-sort-link"
+                >
+                    Points
+                    {% if current_sort == 'points_asc' %}
+                        ▲
+                    {% elif current_sort == 'points_desc' %}
+                        ▼
+                    {% else %}
+                        ↕
+                    {% endif %}
+                </a>
+            </th>
+
+            <th>
+                <a
+                    href="?sort={% if current_sort == 'date_desc' %}date_asc{% else %}date_desc{% endif %}&level={{ current_level }}"
+                    class="ranking-sort-link"
+                >
+                    Date
+                    {% if current_sort == 'date_asc' %}
+                        ▲
+                    {% elif current_sort == 'date_desc' %}
+                        ▼
+                    {% else %}
+                        ↕
+                    {% endif %}
+                </a>
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for score in scores %}
+            <tr>
+                <td>#{{ forloop.counter }}</td>
+                <td><strong>{{ score.user.username }}</strong></td>
+                <td>{{ score.level }}</td>
+                <td>{{ score.score }}</td>
+                <td>{{ score.created_at|date:"d.m.Y H:i" }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center;">
+                    No scores yet. Be the first to play!
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

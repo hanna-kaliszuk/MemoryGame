@@ -12,4 +12,5 @@ urlpatterns = [
         views.ranking_stream,
         name="ranking-stream",
     ),
+    path("ranking/", views.ranking_page, name="ranking-page"),
 ]
