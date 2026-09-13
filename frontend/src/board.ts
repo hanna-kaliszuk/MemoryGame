@@ -1,4 +1,4 @@
-import { MemoryGame } from './game';
+import {MemoryGame} from './game';
 
 export class Board {
     private readonly container: HTMLElement;
@@ -8,14 +8,29 @@ export class Board {
         const element = document.getElementById(containerId);
 
         if (!element) {
-            throw new Error(`Could not find container with ID: ${containerId}`);
+            throw new Error(`Nie znaleziono kontenera o ID: ${containerId}`);
         }
 
         this.container = element;
         this.game = game;
     }
 
+    public updateStats(): void {
+        const scoreElement = document.getElementById('game-score');
+        const timerElement = document.getElementById('game-timer');
+
+        if (scoreElement) {
+            scoreElement.textContent = `${this.game.getScore()} p`;
+        }
+
+        if (timerElement) {
+            timerElement.textContent = `${this.game.getRemainingTime()}s`;
+        }
+    }
+
     public render(): void {
+        this.updateStats();
+
         this.container.innerHTML = '';
 
         const cards = this.game.getCards();
@@ -39,7 +54,31 @@ export class Board {
 
             cardElement.dataset.id = card.id.toString();
 
+            cardElement.addEventListener('click', () => {
+                const cardId = Number(cardElement.dataset.id);
+
+                if (!this.game.revealCard(cardId)) {
+                    return;
+                }
+
+                this.render();
+
+                const result = this.game.checkMatch();
+
+                if (result !== null) {
+                    this.render();
+
+                    if (result === false) {
+                        setTimeout(() => {
+                            this.render();
+                        }, 1000);
+                    }
+                }
+            });
+
             this.container.appendChild(cardElement);
         });
     }
+
+
 }
