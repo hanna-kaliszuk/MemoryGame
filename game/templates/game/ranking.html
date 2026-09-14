@@ -153,7 +153,7 @@
         </tr>
     </thead>
 
-    <tbody>
+    <tbody id="ranking-body">
         {% for score in scores %}
             <tr>
                 <td>#{{ forloop.counter }}</td>
@@ -171,5 +171,51 @@
         {% endfor %}
     </tbody>
 </table>
+
+<script>
+    const rankingBody = document.getElementById("ranking-body");
+
+    const sort = "{{ current_sort }}";
+    const level = "{{ current_level }}";
+
+    const eventSource = new EventSource(
+        `/api/ranking/history/stream/?sort=${sort}&level=${level}`
+    );
+
+    eventSource.onmessage = (event) => {
+        const scores = JSON.parse(event.data);
+
+        rankingBody.innerHTML = "";
+
+        if (scores.length === 0) {
+            rankingBody.innerHTML = `
+                <tr>
+                    <td colspan="5" style="text-align: center;">
+                        No scores yet. Be the first to play!
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        scores.forEach((score, index) => {
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+                <td>#${index + 1}</td>
+                <td><strong>${score.username}</strong></td>
+                <td>${score.level}</td>
+                <td>${score.score}</td>
+                <td>${score.created_at}</td>
+            `;
+
+            rankingBody.appendChild(row);
+        });
+    };
+
+    eventSource.onerror = () => {
+        console.warn("Ranking SSE connection error.");
+    };
+</script>
 
 {% endblock %}
