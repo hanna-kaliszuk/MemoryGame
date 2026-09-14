@@ -5,6 +5,8 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+DEBUG = True
+
 load_dotenv()
 SECRET_KEY = os.environ["SECRET_KEY"]
 
