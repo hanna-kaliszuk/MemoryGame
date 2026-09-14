@@ -142,6 +142,7 @@ MemoryGame/
 │   ├── settings.py
 │   └── urls.py
 │
+├── .env.example
 ├── manage.py
 ├── pyproject.toml
 ├── uv.lock
@@ -179,19 +180,48 @@ MemoryGame/
 ---
 ## Running Locally
 
-Install the Python dependencies:
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/hanna-kaliszuk/MemoryGame.git
+cd MemoryGame
+```
+
+### 2. Configure environment variables
+
+Create a local `.env` file from the provided example:
+
+```bash
+cp .env.example .env
+```
+
+Generate a new Django secret key:
+
+```bash
+uv run python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+```
+
+Copy the generated key into `.env`:
+
+```env
+SECRET_KEY=your-generated-secret-key
+```
+
+The `.env` file is ignored by Git and should not be committed.
+
+### 3. Install Python dependencies
 
 ```bash
 uv sync
 ```
 
-Apply the database migrations:
+### 4. Apply database migrations
 
 ```bash
 uv run python manage.py migrate
 ```
 
-Install the frontend dependencies and build the TypeScript application:
+### 5. Install frontend dependencies and build the TypeScript application
 
 ```bash
 cd frontend
@@ -200,18 +230,22 @@ npm run build
 cd ..
 ```
 
-Start the Django development server:
+### 6. Start the Django development server
 
 ```bash
 uv run python manage.py runserver
 ```
 
-The application will then be available at `http://127.0.0.1:8000/`.
+The application will then be available at:
 
+```text
+http://127.0.0.1:8000/
+```
+---
 ## Context
 
 This project is an improved version of the final project developed as part of the Web Applications course at the 
-University of Warsaw.
+University of Warsaw. It is intended for educational purposes and local development rather than production deployment.
 
 The main goal was to build a complete web application and gain practical experience with Django, REST APIs, 
 authentication, database persistence, TypeScript and server-to-client communication using Server-Sent Events.
