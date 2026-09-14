@@ -194,6 +194,8 @@ tr:hover td {
     flex-wrap: wrap;
     gap: 12px;
     max-width: none;
+    width: max-content;
+    flex-shrink: 0;
     align-content: flex-start;
 }
 
