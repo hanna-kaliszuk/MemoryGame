@@ -3,8 +3,6 @@
 A browser-based memory game built with TypeScript and Django. Combines client-side game logic with a Django backend 
 (authentication, storing results, rankings, API communication). It also includes a live leaderboard implemented with Server-Sent Events.
 
-![Memory Game gameplay](docs/gameplay.gif)
-
 ---
 ## Features
 
@@ -19,6 +17,8 @@ A browser-based memory game built with TypeScript and Django. Combines client-si
 
 ---
 ## Game
+
+![Memory Game gameplay](docs/gameplay.gif)
 
 The game is based on matching pairs of cards within a time limit.
 
