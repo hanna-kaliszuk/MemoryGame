@@ -193,7 +193,7 @@ tr:hover td {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
-    max-width: 600px;
+    max-width: none;
     align-content: flex-start;
 }
 

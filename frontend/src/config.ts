@@ -28,6 +28,6 @@ export const LEVELS: Record<number, LevelConfig> = {
         rows: 6,
         columns: 8,
         pairs: 24,
-        timeLimit: 110,
+        timeLimit: 150,
     },
 };
