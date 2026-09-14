@@ -25,7 +25,7 @@ The game is based on matching pairs of cards within a time limit.
 | 1 | 4 × 4 | 8 | 60 s |
 | 2 | 4 × 6 | 12 | 90 s |
 | 3 | 6 × 6 | 18 | 120 s |
-| 4 | 6 × 8 | 24 | 110 s |
+| 4 | 6 × 8 | 24 | 150 s |
 
 Scoring is based on the following rules:
 
